@@ -24,8 +24,9 @@ for i, msg in enumerate(st.session_state["messages"]):
 user_input = st.text_input("Your message:", key="user_input")
 
 if user_input:
-    # Append user message
+    # Append user message and AI response
     st.session_state["messages"].append({"content": user_input, "is_user": True})
+    st.session_state["messages"].append({"content": user_input, "is_user": False})
     
-    # Refresh page to display new messages
-    st.experimental_rerun()
+    # Display response immediately
+    st.chat_message("assistant").write(user_input)
