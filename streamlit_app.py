@@ -16,17 +16,20 @@ if "messages" not in st.session_state:
 st.title("Chat Interface")
 st.write("Type a message below.")
 
-# Display previous messages
-for i, msg in enumerate(st.session_state["messages"]):
-    st.chat_message("user" if msg["is_user"] else "assistant").write(msg["content"])
+# Display previous messages in chat format
+chat_container = st.container()
+with chat_container:
+    for i, msg in enumerate(st.session_state["messages"]):
+        with st.chat_message("user" if msg["is_user"] else "assistant"):
+            st.write(msg["content"])
 
-# User Input
-user_input = st.text_input("Your message:", key="user_input")
+# User Input Box at Bottom
+user_input = st.text_input("Type your message and press Enter...", key="user_input", label_visibility="hidden")
 
 if user_input:
     # Append user message and AI response
     st.session_state["messages"].append({"content": user_input, "is_user": True})
     st.session_state["messages"].append({"content": user_input, "is_user": False})
     
-    # Display response immediately
-    st.chat_message("assistant").write(user_input)
+    # Refresh UI
+    st.rerun()
