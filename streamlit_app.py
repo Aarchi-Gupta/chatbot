@@ -11,8 +11,6 @@ with st.sidebar:
 # Initialize session state
 if "messages" not in st.session_state:
     st.session_state["messages"] = []
-if "user_input" not in st.session_state:
-    st.session_state["user_input"] = ""
 
 # Chat UI with ChatGPT-style layout
 st.markdown("""
@@ -48,13 +46,12 @@ with chat_container:
             st.markdown(f'<div class="stChatMessage {"user-message" if msg["is_user"] else "assistant-message"}">{msg["content"]}</div>', unsafe_allow_html=True)
 
 # User Input Box at Bottom
-user_input = st.text_input("Type your message and press Enter...", key="user_input", label_visibility="hidden")
+temp_input = st.text_input("Type your message and press Enter...")
 
-if user_input:
+if temp_input:
     # Append user message and AI response
-    st.session_state["messages"].append({"content": user_input, "is_user": True})
-    st.session_state["messages"].append({"content": user_input, "is_user": False})
+    st.session_state["messages"].append({"content": temp_input, "is_user": True})
+    st.session_state["messages"].append({"content": temp_input, "is_user": False})
     
-    # Clear input field
-    st.session_state["user_input"] = ""
+    # Rerun UI
     st.rerun()
