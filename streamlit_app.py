@@ -1,57 +1,33 @@
 import streamlit as st
 
-# Page Config
-st.set_page_config(page_title="Chat UI", layout="wide")
+# Set the page title
+st.set_page_config(page_title="Financial RAG Chatbot Cognizant")
 
-# Sidebar
-with st.sidebar:
-    st.title("ChatGPT-like UI")
-    st.markdown("Adjust your settings here.")
+# Add a title to the app
+st.title("Financial RAG Chatbot Cognizant")
 
-# Initialize session state
+# Initialize session state for messages
 if "messages" not in st.session_state:
-    st.session_state["messages"] = []
+    st.session_state.messages = []
 
-# Chat UI with ChatGPT-style layout
-st.markdown("""
-    <style>
-        .stChatMessage {
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-        .user-message {
-            background-color: #dcf8c6;
-            text-align: right;
-        }
-        .assistant-message {
-            background-color: #f1f1f1;
-            text-align: left;
-        }
-        .stTextInput {
-            position: fixed;
-            bottom: 10px;
-            width: 90%;
-        }
-    </style>
-""", unsafe_allow_html=True)
+# Display the chat history
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-st.title("Chat Interface")
+# Create a text input for the user message
+user_input = st.chat_input("Type your message...")
 
-# Display previous messages in chat format
-chat_container = st.container()
-with chat_container:
-    for i, msg in enumerate(st.session_state["messages"]):
-        with st.chat_message("user" if msg["is_user"] else "assistant"):
-            st.markdown(f'<div class="stChatMessage {"user-message" if msg["is_user"] else "assistant-message"}">{msg["content"]}</div>', unsafe_allow_html=True)
+# If user sends a message
+if user_input:
+    # Add the user's message to the chat history
+    st.session_state.messages.append({"role": "user", "content": user_input})
 
-# User Input Box at Bottom
-temp_input = st.text_input("Type your message and press Enter...")
+    # Hardcoded bot response
+    bot_response = "This is a hardcoded response from the bot."
 
-if temp_input:
-    # Append user message and AI response
-    st.session_state["messages"].append({"content": temp_input, "is_user": True})
-    st.session_state["messages"].append({"content": temp_input, "is_user": False})
-    
-    # Rerun UI
+    # Add the bot's response to the chat history
+    st.session_state.messages.append({"role": "bot", "content": bot_response})
+
+    # Rerun the script to reflect the updated messages
     st.rerun()
